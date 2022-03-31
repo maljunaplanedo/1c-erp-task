@@ -36,3 +36,8 @@ class Shift(Base):
             return
         current.open = False
         db.commit()
+
+    @staticmethod
+    def get_list():
+        db = current_app.db()
+        return [(shift.id, shift.name) for shift in db.query(Shift).all()]

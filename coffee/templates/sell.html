@@ -5,21 +5,58 @@
 <form name="sell" method="post" id="sell_form" action="/sell">
     <input type="submit" value="Продать"><br>
     <input type="hidden" name="size" id="sell_size" value="1">
-	<input type="text" name="type1" placeholder="Кофе"><input type="text" name="number1" value="1"><br>
 </form>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
+    COFFEE_SELECTOR = `<select name='type$$$'>
+    {% for type in coffee_types %}
+    <option value='{{ type[0] }}'>{{ type[1] }}</option>
+    {% endfor %}
+    </select>`
+
+    add = function(i) {
+        $('#sell_form').append(COFFEE_SELECTOR.replace('$$$', i.toString()));
+
+        b = $("<button class='plus" + i + "'>+</button>");
+        bm = $("<button class='minus" + i + "'>-</button>");
+        x = $("<input type='text' class='number" + count + "' value='1' name='number" + count + "'>");
+        $('#sell_form').append(x);
+        $('#sell_form').append(b);
+        $('#sell_form').append(bm);
+
+        $('.plus' + i).click(
+            function(e) {
+                e.preventDefault();
+                v = parseInt($('.number' + i).first().val());
+                v += 1;
+                $('.number' + i).first().val(v);
+            }
+        );
+
+        $('.minus' + i).click(
+            function(e) {
+                e.preventDefault();
+                v = parseInt($('.number' + i).first().val());
+                if (v > 1) {
+                    v -= 1;
+                }
+                $('.number' + i).first().val(v);
+            }
+        );
+
+        $('#sell_form').append("<br>");
+        $('#sell_size').val(i);
+    }
+
     $(
         function() {
             count = 1;
+            add(1);
 
             $('#add_new_coffee').click(function() {
                 count += 1;
-                $('#sell_form').append("<input type='text' placeholder='Кофе' name='type" + count + "'>");
-                $('#sell_form').append("<input type='text' value='1' name='number" + count + "'>");
-                $('#sell_form').append("<br>");
-                $('#sell_size').val(count);
+                add(count);
             });
         }
     );

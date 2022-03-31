@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String
+from flask import current_app
 
 from . import Base
 
@@ -20,3 +21,9 @@ class User(Base):
         self.password = password
         self.type = type_
         self.name = name
+
+    @staticmethod
+    def get_cashiers_list():
+        db = current_app.db()
+        return [(cashier.id, cashier.name) for cashier in
+                db.query(User).filter(User.type == User.CASHIER).all()]

@@ -5,6 +5,7 @@ from flask import request, current_app
 from . import Base
 from .shift import Shift
 from .sell_coffee import SellCoffee
+from .coffee_type import CoffeeType
 
 
 class Sell(Base):
@@ -35,10 +36,11 @@ class Sell(Base):
 
         sell_size = int(request.values.get('size'))
         for i in range(1, sell_size + 1):
-            coffee_name = request.values.get(f'type{i}')
+            coffee_type_id = int(request.values.get(f'type{i}'))
+            coffee_type = db.query(CoffeeType).get(coffee_type_id)
             number = request.values.get(f'number{i}')
 
-            sell_coffee = SellCoffee(new_sell, coffee_name, number)
+            sell_coffee = SellCoffee(new_sell, coffee_type, number)
             db.add(sell_coffee)
 
         db.commit()
@@ -47,28 +49,30 @@ class Sell(Base):
     def search():
         db = current_app.db()
 
-        cashier_name = request.values.get('cashier')
-        shift_name = request.values.get('shift')
-        coffee_name = request.values.get('coffee')
+        cashier_id = request.values.get('cashier')
+        shift_id = request.values.get('shift')
+        coffee_id = request.values.get('coffee')
 
-        if cashier_name is None:
+        if cashier_id is None:
             return None
+
+        cashier_id, shift_id, coffee_id = map(int, (cashier_id, shift_id, coffee_id))
 
         match = db.query(Sell)
 
-        if cashier_name:
-            match = match.filter(Sell.cashier.has(name=cashier_name))
-        if shift_name:
-            match = match.filter(Sell.shift.has(name=shift_name))
-        if coffee_name:
-            match = match.join(SellCoffee).filter(SellCoffee.coffee_name == coffee_name)
+        if cashier_id != -1:
+            match = match.filter(Sell.cashier_id == cashier_id)
+        if shift_id != -1:
+            match = match.filter(Sell.shift_id == shift_id)
+        if coffee_id != -1:
+            match = match.join(SellCoffee).filter(SellCoffee.coffee_type_id == coffee_id)
 
         results = []
 
         for matched_sell in match:
             sell_dict = {'cashier': matched_sell.cashier.name, 'shift': matched_sell.shift.name, 'order': []}
             for record in matched_sell.sell_coffee_records:
-                sell_dict['order'].append({'name': record.coffee_name, 'count': record.coffee_count})
+                sell_dict['order'].append({'name': record.coffee_type.name, 'count': record.coffee_count})
             results.append(sell_dict)
 
         return results

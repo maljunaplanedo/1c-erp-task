@@ -3,7 +3,7 @@ import waitress
 from sqlalchemy.orm import scoped_session
 
 from coffee.db.database import engine, SessionLocal, Base
-from coffee.entities import User, Auth, Shift, Sell
+from coffee.entities import User, Auth, Shift, Sell, CoffeeType
 from coffee.util import load_host_port
 
 Base.metadata.create_all(bind=engine)
@@ -91,7 +91,7 @@ def cashier():
         else:
             result += render_template('html_begin.html', title='Смена')
             result += render_template('cashier_top.html', name=me.name)
-            result += render_template('sell.html', shift=shift.name)
+            result += render_template('sell.html', shift=shift.name, coffee_types=CoffeeType.get_list())
             result += render_template('html_end.html')
         return result
 
@@ -142,7 +142,8 @@ def manager():
         result = ''
         result += render_template('html_begin.html')
         result += render_template('manager_top.html', name=me.name)
-        result += render_template('search_form.html')
+        result += render_template('search_form.html', shifts=Shift.get_list(),
+                                  cashiers=User.get_cashiers_list(), coffee_types=CoffeeType.get_list())
         if sell_search_results:
             result += render_template('search_results.html', results=sell_search_results)
         result += render_template('html_end.html')

@@ -5,3 +5,4 @@ from .shift import Shift
 from .sell import Sell
 from .user import User
 from .sell_coffee import SellCoffee
+from .coffee_type import CoffeeType

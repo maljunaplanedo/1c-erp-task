@@ -1,6 +1,28 @@
 <form name="search_form" action="/manager" method="get">
-  <input type="text" name="cashier" placeholder="Кассир"><br>
-  <input type="text" name="shift" placeholder="Смена"><br>
-  <input type="text" name="coffee" placeholder="Кофе"><br>
+  <label for="cashier">Кассир</label>
+  <select name="cashier" id="cashier">
+    <option selected value="-1">Любой</option>
+    {% for cashier in cashiers %}
+      <option value="{{ cashier[0] }}">{{ cashier[1] }}</option>
+    {% endfor %}
+  </select>
+  <br>
+
+  <label for="shift">Смена</label>
+  <select name="shift" id="shift">
+    <option selected value="-1">Любая</option>
+    {% for shift in shifts %}
+      <option value="{{ shift[0] }}">{{ shift[1] }}</option>
+    {% endfor %}
+  </select><br>
+
+  <label for="coffee">Тип кофе</label>
+  <select name="coffee" id="coffee">
+    <option selected value="-1">Любой</option>
+    {% for type_ in coffee_types %}
+      <option value="{{ type_[0] }}">{{ type_[1] }}</option>
+    {% endfor %}
+  </select><br>
+
   <input type="submit" value="Поиск">
 </form>
