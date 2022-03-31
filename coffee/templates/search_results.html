@@ -1,0 +1,16 @@
+<ul>
+  {% for sell in results %}
+    <li>
+      Кассир: {{ sell['cashier'] }}<br>
+      Смена: {{ sell['shift'] }}<br>
+      Заказ:<br>
+      <ol>
+        {% for item in sell['order'] %}
+        <li>
+          {{ item['name'] }} {{ item['count'] }}
+        </li>
+        {% endfor %}
+      </ol>
+    </li>
+  {% endfor %}
+</ul>

@@ -1,0 +1,4 @@
+c; Алёна; cashier1; cashier1
+c; Владислав; cashier2; cashier2
+m; Геннадий; manager1; manager1
+m; Ульяна; manager2; manager2

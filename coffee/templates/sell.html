@@ -1,0 +1,28 @@
+Смена {{shift}} <br>
+
+<button id="add_new_coffee">Добавить</button>
+
+<form name="sell" method="post" id="sell_form" action="/sell">
+    <input type="submit" value="Продать"><br>
+    <input type="hidden" name="size" id="sell_size" value="1">
+	<input type="text" name="type1" placeholder="Кофе"><input type="text" name="number1" value="1"><br>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    $(
+        function() {
+            count = 1;
+
+            $('#add_new_coffee').click(function() {
+                count += 1;
+                $('#sell_form').append("<input type='text' placeholder='Кофе' name='type" + count + "'>");
+                $('#sell_form').append("<input type='text' value='1' name='number" + count + "'>");
+                $('#sell_form').append("<br>");
+                $('#sell_size').val(count);
+            });
+        }
+    );
+</script>
+
+<a href="close_shift">Закрыть смену</a>
